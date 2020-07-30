@@ -2,7 +2,7 @@ package com.zerdaket.chartpractice
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.zerdaket.chartpractice.view.chart.pie.model.PieData
+import com.zerdaket.chartpractice.widget.chart.pie.model.PieData
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.random.Random
 

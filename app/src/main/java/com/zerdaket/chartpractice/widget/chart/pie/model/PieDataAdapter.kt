@@ -1,4 +1,4 @@
-package com.zerdaket.chartpractice.view.chart.pie.model
+package com.zerdaket.chartpractice.widget.chart.pie.model
 
 import android.graphics.Color
 
