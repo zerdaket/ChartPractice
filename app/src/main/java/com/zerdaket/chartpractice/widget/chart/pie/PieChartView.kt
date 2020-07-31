@@ -17,7 +17,7 @@ class PieChartView @JvmOverloads constructor(context: Context, attrs: AttributeS
 
     private val paint = Paint()
     private var startAngle = 0f
-    private val gapAngle = 4f
+    private val gapAngle = 2f
     private var r = 0
     private val bounds = Rect()
     private var sumValue = 0f
@@ -32,6 +32,9 @@ class PieChartView @JvmOverloads constructor(context: Context, attrs: AttributeS
         paint.isAntiAlias = true
     }
 
+    /**
+     * 确定绘制扇形的路径和点击的区域
+     */
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         val x = w.div(2)
@@ -43,18 +46,21 @@ class PieChartView @JvmOverloads constructor(context: Context, attrs: AttributeS
 
         var currentAngle = startAngle
         for (data in dataCollection) {
-            val angle = data.value.div(sumValue).times(360)
+            val angle = data.value.div(sumValue).times(360).minus(gapAngle)
             val path = Path()
-            path.addArc(RectF(bounds), currentAngle, angle - gapAngle)
+            path.addArc(RectF(bounds), currentAngle, angle)
             path.lineTo(x.toFloat(), y.toFloat())
             path.close()
             val region = Region()
             region.setPath(path, globalRegion)
             dataTypeMap[data.type] = Pair(path, region)
-            currentAngle += angle
+            currentAngle += angle.plus(gapAngle)
         }
     }
 
+    /**
+     * 根据扇形不同的状态绘制
+     */
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
@@ -67,6 +73,9 @@ class PieChartView @JvmOverloads constructor(context: Context, attrs: AttributeS
         }
     }
 
+    /**
+     * 记录被点击的区域
+     */
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val x = event.x.toInt()
         val y = event.y.toInt()
