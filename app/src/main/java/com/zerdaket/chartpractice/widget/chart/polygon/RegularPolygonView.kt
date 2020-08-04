@@ -1,12 +1,13 @@
 package com.zerdaket.chartpractice.widget.chart.polygon
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Path
-import android.graphics.Point
+import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
+import kotlin.math.PI
+import kotlin.math.cos
 import kotlin.math.min
+import kotlin.math.sin
 
 /**
  * @author zerdaket
@@ -17,7 +18,14 @@ class RegularPolygonView @JvmOverloads constructor(context: Context, attrs: Attr
     /**
      * 外接圆半径
      */
-    private var radius = 0
+    private var radius = 0f
+
+    private var maxValue = 6f
+
+    private var valueStep = 1.0f // maxValue % valueStep == 0
+
+    private var lines = 6
+    private val angle = PI.times(2).div(lines).toFloat()
 
     /**
      * 中心点
@@ -29,9 +37,16 @@ class RegularPolygonView @JvmOverloads constructor(context: Context, attrs: Attr
      */
     private val path = Path()
 
+    private val mainPaint = Paint()
+
+    init {
+        mainPaint.style = Paint.Style.STROKE
+        mainPaint.color = Color.BLACK
+    }
+
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        radius = min(w, h).div(2)
+        radius = min(w, h).div(2f)
         centerPoint.set(w.div(2), h.div(2))
     }
 
@@ -43,7 +58,23 @@ class RegularPolygonView @JvmOverloads constructor(context: Context, attrs: Attr
     }
 
     private fun drawPolygon(canvas: Canvas) {
-        path.reset()
+        val radiusStep = valueStep.div(maxValue).times(radius)
+        val count = maxValue.div(valueStep).toInt()
+        for (i in 1..count) {
+            path.reset()
+            val curRadius = radiusStep.times(i)
+            for (j in 0..lines) {
+                if (j == 0) {
+                    path.moveTo(centerPoint.x.plus(curRadius), centerPoint.y.toFloat())
+                } else {
+                    val x = cos(angle.times(j)).times(curRadius).plus(centerPoint.x)
+                    val y = sin(angle.times(j)).times(curRadius).plus(centerPoint.y)
+                    path.lineTo(x, y)
+                }
+            }
+            path.close()
+            canvas.drawPath(path, mainPaint)
+        }
     }
 
     private fun drawLines(canvas: Canvas) {

@@ -10,8 +10,13 @@
     <com.zerdaket.chartpractice.widget.chart.pie.PieChartView
         android:id="@+id/pieChart"
         android:layout_marginTop="20dp"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_gravity="center"/>
+
+    <com.zerdaket.chartpractice.widget.chart.polygon.RegularPolygonView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:layout_gravity="center"/>
 
 </LinearLayout>
