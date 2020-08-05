@@ -78,7 +78,14 @@ class RegularPolygonView @JvmOverloads constructor(context: Context, attrs: Attr
     }
 
     private fun drawLines(canvas: Canvas) {
-
+        for (i in 0..lines) {
+            path.reset()
+            path.moveTo(centerPoint.x.toFloat(), centerPoint.y.toFloat())
+            val x = cos(angle.times(i)).times(radius).plus(centerPoint.x)
+            val y = sin(angle.times(i)).times(radius).plus(centerPoint.y)
+            path.lineTo(x, y)
+            canvas.drawPath(path, mainPaint)
+        }
     }
 
     private fun drawRegion(canvas: Canvas) {
