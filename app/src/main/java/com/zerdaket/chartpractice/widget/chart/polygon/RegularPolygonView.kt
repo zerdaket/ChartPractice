@@ -4,10 +4,7 @@ import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
-import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.min
-import kotlin.math.sin
+import kotlin.math.*
 
 /**
  * @author zerdaket
@@ -38,10 +35,15 @@ class RegularPolygonView @JvmOverloads constructor(context: Context, attrs: Attr
     private val path = Path()
 
     private val mainPaint = Paint()
+    private val valuePaint = Paint()
+
+    private val dataList = ArrayList<Float>()
 
     init {
         mainPaint.style = Paint.Style.STROKE
         mainPaint.color = Color.BLACK
+        valuePaint.strokeWidth = 4f
+        valuePaint.color = Color.GRAY
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -89,6 +91,35 @@ class RegularPolygonView @JvmOverloads constructor(context: Context, attrs: Attr
     }
 
     private fun drawRegion(canvas: Canvas) {
+        val size = min(dataList.size, lines)
+        valuePaint.alpha = 255
+        valuePaint.style = Paint.Style.STROKE
+        path.reset()
+        for (i in 0 until size) {
+            val value = min(dataList[i], maxValue)
+            val ratio = value.div(maxValue)
+            val r = ratio.times(radius)
 
+            val x = cos(angle.times(i)).times(r).plus(centerPoint.x)
+            val y = sin(angle.times(i)).times(r).plus(centerPoint.y)
+
+            if (i == 0) {
+                path.moveTo(x, y)
+            } else {
+                path.lineTo(x, y)
+            }
+            canvas.drawCircle(x, y, 8f, valuePaint)
+        }
+        path.close()
+        canvas.drawPath(path, valuePaint)
+        valuePaint.alpha = 127
+        valuePaint.style = Paint.Style.FILL_AND_STROKE
+        canvas.drawPath(path, valuePaint)
+    }
+
+    fun setData(data: List<Float>) {
+        dataList.clear()
+        dataList.addAll(data)
+        invalidate()
     }
 }

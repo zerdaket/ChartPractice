@@ -15,6 +15,7 @@
         android:layout_gravity="center"/>
 
     <com.zerdaket.chartpractice.widget.chart.polygon.RegularPolygonView
+        android:id="@+id/polygon"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_gravity="center"/>
