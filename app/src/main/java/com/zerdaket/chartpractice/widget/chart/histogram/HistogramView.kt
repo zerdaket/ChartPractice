@@ -1,9 +1,7 @@
 package com.zerdaket.chartpractice.widget.chart.histogram
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
+import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
 import com.zerdaket.chartpractice.widget.sp2px
@@ -14,20 +12,75 @@ import com.zerdaket.chartpractice.widget.sp2px
  */
 class HistogramView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0): View(context, attrs, defStyleAttr) {
 
+
     private val week = arrayOf("Sun.", "Mon.", "Tues.", "Wed.", "Thur.", "Fri.", "Sat.")
     private val textPaint = Paint()
+    private val mainPaint = Paint()
+
+    /**
+     * 条形图原点
+     */
+    private val originalPoint = Point()
+
+    private var marginBottom = 0f
+    private var histogramGapRatio = 5f
+    private var histogramWidthRatio = 10f
+    private var totalHeightRatio = 100f
+    private val totalWidthRatio = histogramWidthRatio.times(7) + histogramGapRatio.times(8)
+    private val histogramRatio = totalWidthRatio.div(totalHeightRatio)
+
+    private val globalRegion = Region()
 
     init {
         textPaint.color = Color.GRAY
         textPaint.textSize = 12f.sp2px()
+        textPaint.isAntiAlias = true
+        mainPaint.color = Color.LTGRAY
+        mainPaint.isAntiAlias = true
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
+        // 绘制条形图居中显示，计算原点
+        val x: Float
+        val y: Float
+        val histogramWidth: Float
+        val histogramHeight: Float
+        val viewRatio = w.div(h.toFloat())
+        // 绘制条形图 width < height
+        if (viewRatio >= 1) {
+            // View width >= height，绘制条形图的height与View的height一致
+            histogramHeight = h.toFloat()
+            histogramWidth = histogramRatio.times(histogramHeight)
+            x = w.minus(histogramWidth).div(2)
+            y = histogramHeight
+        } else {
+            // View width < height，绘制条形图的width与View的width一致
+            histogramWidth = w.toFloat()
+            histogramHeight = histogramWidth.div(histogramRatio)
+            x = 0f
+            y = h.minus(histogramHeight).div(2)
+        }
+        globalRegion.set(x.toInt(), y.minus(histogramHeight).toInt(), x.plus(histogramWidth).toInt(), y.toInt())
+        originalPoint.set(x.toInt(), y.toInt())
     }
 
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        drawHistogramBackground(canvas)
+        drawHistogram(canvas)
+        drawBottomText(canvas)
     }
 
+    private fun drawHistogramBackground(canvas: Canvas) {
+
+    }
+
+    private fun drawHistogram(canvas: Canvas) {
+
+    }
+
+    private fun drawBottomText(canvas: Canvas) {
+
+    }
 }
