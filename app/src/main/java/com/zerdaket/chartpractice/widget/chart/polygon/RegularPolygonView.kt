@@ -17,11 +17,24 @@ class RegularPolygonView @JvmOverloads constructor(context: Context, attrs: Attr
      */
     private var radius = 0f
 
+    /**
+     * 最大值
+     */
     private var maxValue = 6f
 
+    /**
+     * 步长
+     */
     private var valueStep = 1.0f // maxValue % valueStep == 0
 
+    /**
+     * 边的个数
+     */
     private var lines = 6
+
+    /**
+     * 内角
+     */
     private val angle = PI.times(2).div(lines).toFloat()
 
     /**
