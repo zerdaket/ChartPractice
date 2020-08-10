@@ -3,6 +3,7 @@ package com.zerdaket.chartpractice.widget.chart.histogram
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
 import com.zerdaket.chartpractice.widget.sp2px
 
@@ -28,6 +29,8 @@ class HistogramView @JvmOverloads constructor(context: Context, attrs: Attribute
     private var totalHeightRatio = 100f
     private val totalWidthRatio = histogramWidthRatio.times(7) + histogramGapRatio.times(8)
     private val histogramRatio = totalWidthRatio.div(totalHeightRatio)
+    private val dayRegionMap = mutableMapOf<Int, Region>()
+    private var currentSelectedDay = -1
 
     private val globalRegion = Region()
 
@@ -70,6 +73,36 @@ class HistogramView @JvmOverloads constructor(context: Context, attrs: Attribute
         drawHistogramBackground(canvas)
         drawHistogram(canvas)
         drawBottomText(canvas)
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        val x = event.x.toInt()
+        val y = event.y.toInt()
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> {
+
+            }
+            MotionEvent.ACTION_MOVE -> {
+
+            }
+            MotionEvent.ACTION_UP -> {
+
+            }
+            MotionEvent.ACTION_CANCEL -> {
+
+            }
+        }
+        invalidate()
+        return true
+    }
+
+    private fun getTouchedRegion(x: Int, y: Int): Int {
+        for (dayRegion in dayRegionMap) {
+            if (dayRegion.value.contains(x, y)) {
+                return dayRegion.key
+            }
+        }
+        return -1
     }
 
     private fun drawHistogramBackground(canvas: Canvas) {
