@@ -21,7 +21,7 @@ class HistogramView @JvmOverloads constructor(context: Context, attrs: Attribute
     /**
      * 条形图原点
      */
-    private val originalPoint = Point()
+    private val originalPointF = PointF()
 
     private var marginBottom = 0f
     private var histogramGapRatio = 5f
@@ -29,7 +29,7 @@ class HistogramView @JvmOverloads constructor(context: Context, attrs: Attribute
     private var totalHeightRatio = 100f
     private val totalWidthRatio = histogramWidthRatio.times(7) + histogramGapRatio.times(8)
     private val histogramRatio = totalWidthRatio.div(totalHeightRatio)
-    private val dayRegionMap = mutableMapOf<Int, Region>()
+    private val dayRegionMap = mutableMapOf<Int, Pair<Path, Region>>()
     private var currentSelectedDay = -1
 
     private val globalRegion = Region()
@@ -65,7 +65,14 @@ class HistogramView @JvmOverloads constructor(context: Context, attrs: Attribute
             y = h.minus(histogramHeight).div(2)
         }
         globalRegion.set(x.toInt(), y.minus(histogramHeight).toInt(), x.plus(histogramWidth).toInt(), y.toInt())
-        originalPoint.set(x.toInt(), y.toInt())
+        originalPointF.set(x, y)
+        val histogramGap = histogramGapRatio.div(totalWidthRatio).times(histogramWidth)
+        for (index in 0..6) {
+            val left = histogramGap.times(index + 1) + histogramWidth.times(index)
+            val top = y.minus(histogramHeight)
+            val right = histogramGap.times(index + 1) + histogramWidth.times(index + 1)
+            val bottom = y
+        }
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -98,7 +105,7 @@ class HistogramView @JvmOverloads constructor(context: Context, attrs: Attribute
 
     private fun getTouchedRegion(x: Int, y: Int): Int {
         for (dayRegion in dayRegionMap) {
-            if (dayRegion.value.contains(x, y)) {
+            if (dayRegion.value.second.contains(x, y)) {
                 return dayRegion.key
             }
         }
