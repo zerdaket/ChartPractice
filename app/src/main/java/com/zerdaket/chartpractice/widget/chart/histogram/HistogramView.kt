@@ -62,16 +62,27 @@ class HistogramView @JvmOverloads constructor(context: Context, attrs: Attribute
             histogramWidth = w.toFloat()
             histogramHeight = histogramWidth.div(histogramRatio)
             x = 0f
-            y = h.minus(histogramHeight).div(2)
+            y = h - h.minus(histogramHeight).div(2)
         }
         globalRegion.set(x.toInt(), y.minus(histogramHeight).toInt(), x.plus(histogramWidth).toInt(), y.toInt())
         originalPointF.set(x, y)
         val histogramGap = histogramGapRatio.div(totalWidthRatio).times(histogramWidth)
-        for (index in 0..6) {
+        for (index in 0..1) {
             val left = histogramGap.times(index + 1) + histogramWidth.times(index)
             val top = y.minus(histogramHeight)
             val right = histogramGap.times(index + 1) + histogramWidth.times(index + 1)
             val bottom = y
+            val arcHeight = histogramHeight.times(0.05f)
+            val path = Path()
+            val region = Region()
+            path.moveTo(left, bottom.minus(arcHeight))
+            path.lineTo(left, top.plus(arcHeight))
+            path.arcTo(left, top, right, top.plus(arcHeight), -180f, 180f, false)
+            path.lineTo(right, bottom.minus(arcHeight))
+            path.arcTo(left, bottom.minus(arcHeight), right, bottom, 0f, 180f, false)
+            path.close()
+            region.setPath(path, globalRegion)
+            dayRegionMap[index] = Pair(path, region)
         }
     }
 
@@ -113,7 +124,9 @@ class HistogramView @JvmOverloads constructor(context: Context, attrs: Attribute
     }
 
     private fun drawHistogramBackground(canvas: Canvas) {
-
+        for (dayMap in dayRegionMap) {
+            canvas.drawPath(dayMap.value.first, mainPaint)
+        }
     }
 
     private fun drawHistogram(canvas: Canvas) {
