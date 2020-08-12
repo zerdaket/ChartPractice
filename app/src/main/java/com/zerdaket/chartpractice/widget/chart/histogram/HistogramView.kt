@@ -47,32 +47,32 @@ class HistogramView @JvmOverloads constructor(context: Context, attrs: Attribute
         // 绘制条形图居中显示，计算原点
         val x: Float
         val y: Float
-        val histogramWidth: Float
+        val histogramTotalWidth: Float
         val histogramHeight: Float
         val viewRatio = w.div(h.toFloat())
-        // 绘制条形图 width < height
         if (viewRatio >= 1) {
             // View width >= height，绘制条形图的height与View的height一致
             histogramHeight = h.toFloat()
-            histogramWidth = histogramRatio.times(histogramHeight)
-            x = w.minus(histogramWidth).div(2)
+            histogramTotalWidth = histogramRatio.times(histogramHeight)
+            x = w.minus(histogramTotalWidth).div(2)
             y = histogramHeight
         } else {
             // View width < height，绘制条形图的width与View的width一致
-            histogramWidth = w.toFloat()
-            histogramHeight = histogramWidth.div(histogramRatio)
+            histogramTotalWidth = w.toFloat()
+            histogramHeight = histogramTotalWidth.div(histogramRatio)
             x = 0f
             y = h - h.minus(histogramHeight).div(2)
         }
-        globalRegion.set(x.toInt(), y.minus(histogramHeight).toInt(), x.plus(histogramWidth).toInt(), y.toInt())
+        globalRegion.set(x.toInt(), y.minus(histogramHeight).toInt(), x.plus(histogramTotalWidth).toInt(), y.toInt())
         originalPointF.set(x, y)
-        val histogramGap = histogramGapRatio.div(totalWidthRatio).times(histogramWidth)
-        for (index in 0..1) {
-            val left = histogramGap.times(index + 1) + histogramWidth.times(index)
+        val histogramGap = histogramGapRatio.div(totalWidthRatio).times(histogramTotalWidth)
+        val histogramWidth = histogramWidthRatio.div(totalWidthRatio).times(histogramTotalWidth)
+        for (index in 0..6) {
+            val left = histogramGap.times(index + 1) + histogramWidth.times(index) + x
             val top = y.minus(histogramHeight)
-            val right = histogramGap.times(index + 1) + histogramWidth.times(index + 1)
+            val right = histogramGap.times(index + 1) + histogramWidth.times(index + 1) + x
             val bottom = y
-            val arcHeight = histogramHeight.times(0.05f)
+            val arcHeight = histogramHeight.times(0.1f)
             val path = Path()
             val region = Region()
             path.moveTo(left, bottom.minus(arcHeight))
