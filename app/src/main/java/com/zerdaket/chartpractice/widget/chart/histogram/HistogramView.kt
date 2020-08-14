@@ -5,6 +5,7 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import com.zerdaket.chartpractice.widget.dp2px
 import com.zerdaket.chartpractice.widget.sp2px
 
 /**
@@ -24,19 +25,20 @@ class HistogramView @JvmOverloads constructor(context: Context, attrs: Attribute
     private val originalPointF = PointF()
 
     private var marginBottom = 0f
-    private var histogramGapRatio = 8f
+    private var histogramGapRatio = 12f
     private var histogramWidthRatio = 8f
-    private var totalHeightRatio = 100f
+    private var totalHeightRatio = 120f
     private val totalWidthRatio = histogramWidthRatio.times(7) + histogramGapRatio.times(8)
     private val histogramRatio = totalWidthRatio.div(totalHeightRatio)
     private val dayRegionMap = mutableMapOf<Int, Pair<Path, Region>>()
+    private val textPositions = arrayListOf<PointF>()
     private var currentSelectedDay = -1
 
     private val globalRegion = Region()
 
     init {
         textPaint.color = Color.GRAY
-        textPaint.textSize = 12f.sp2px()
+        textPaint.textSize = 10f.sp2px()
         textPaint.isAntiAlias = true
         mainPaint.color = Color.LTGRAY
         mainPaint.isAntiAlias = true
@@ -67,11 +69,12 @@ class HistogramView @JvmOverloads constructor(context: Context, attrs: Attribute
         originalPointF.set(x, y)
         val histogramGap = histogramGapRatio.div(totalWidthRatio).times(histogramTotalWidth)
         val histogramWidth = histogramWidthRatio.div(totalWidthRatio).times(histogramTotalWidth)
+        textPositions.clear()
         for (index in 0..6) {
             val left = histogramGap.times(index + 1) + histogramWidth.times(index) + x
             val top = y.minus(histogramHeight)
             val right = histogramGap.times(index + 1) + histogramWidth.times(index + 1) + x
-            val bottom = y
+            val bottom = y - textPaint.textSize.plus(8f.dp2px())
             val arcHeight = histogramHeight.times(0.08f)
             val path = Path()
             val region = Region()
@@ -83,6 +86,11 @@ class HistogramView @JvmOverloads constructor(context: Context, attrs: Attribute
             path.close()
             region.setPath(path, globalRegion)
             dayRegionMap[index] = Pair(path, region)
+            val textWidth = textPaint.measureText(week[index])
+            val centerX = left + histogramWidth.div(2)
+            val textX = centerX - textWidth.div(2)
+            val textY = y.plus(4f.dp2px())
+            textPositions.add(PointF(textX, textY))
         }
     }
 
@@ -134,6 +142,9 @@ class HistogramView @JvmOverloads constructor(context: Context, attrs: Attribute
     }
 
     private fun drawBottomText(canvas: Canvas) {
-
+        for (index in week.indices) {
+            val pointF = textPositions[index]
+            canvas.drawText(week[index], pointF.x, pointF.y, textPaint)
+        }
     }
 }

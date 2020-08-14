@@ -7,4 +7,6 @@ import com.zerdaket.chartpractice.App
  * @date 2020/8/8 6:24 PM
  */
 
+fun Float.dp2px(): Float = this.times(App.getContext().resources.displayMetrics.density)
+
 fun Float.sp2px(): Float = this.times(App.getContext().resources.displayMetrics.scaledDensity)
