@@ -24,8 +24,8 @@ class HistogramView @JvmOverloads constructor(context: Context, attrs: Attribute
     private val originalPointF = PointF()
 
     private var marginBottom = 0f
-    private var histogramGapRatio = 5f
-    private var histogramWidthRatio = 10f
+    private var histogramGapRatio = 8f
+    private var histogramWidthRatio = 8f
     private var totalHeightRatio = 100f
     private val totalWidthRatio = histogramWidthRatio.times(7) + histogramGapRatio.times(8)
     private val histogramRatio = totalWidthRatio.div(totalHeightRatio)
@@ -72,7 +72,7 @@ class HistogramView @JvmOverloads constructor(context: Context, attrs: Attribute
             val top = y.minus(histogramHeight)
             val right = histogramGap.times(index + 1) + histogramWidth.times(index + 1) + x
             val bottom = y
-            val arcHeight = histogramHeight.times(0.1f)
+            val arcHeight = histogramHeight.times(0.08f)
             val path = Path()
             val region = Region()
             path.moveTo(left, bottom.minus(arcHeight))
