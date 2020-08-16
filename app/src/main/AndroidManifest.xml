@@ -17,6 +17,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".PieChartActivity" />
+        <activity android:name=".RegularPolygonActivity" />
+        <activity android:name=".HistogramActivity" />
     </application>
 
 </manifest>
