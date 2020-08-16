@@ -11,25 +11,23 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.zerdaket.chartpractice.widget.chart.pie.PieChartView
-            android:id="@+id/pieChart"
-            android:layout_marginTop="20dp"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_gravity="center"/>
+        <Button
+            android:id="@+id/pieChartBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="PieChart"/>
 
-        <com.zerdaket.chartpractice.widget.chart.polygon.RegularPolygonView
-            android:id="@+id/polygon"
-            android:layout_marginTop="20dp"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_gravity="center"/>
+        <Button
+            android:id="@+id/regularPolygonBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="RegularPolygon"/>
 
-        <com.zerdaket.chartpractice.widget.chart.histogram.HistogramView
-            android:layout_marginTop="20dp"
-            android:layout_width="200dp"
-            android:layout_height="240dp"
-            android:layout_gravity="center"/>
+        <Button
+            android:id="@+id/histogramBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Histogram"/>
 
     </LinearLayout>
 

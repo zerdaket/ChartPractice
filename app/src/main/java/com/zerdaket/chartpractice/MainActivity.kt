@@ -1,24 +1,23 @@
 package com.zerdaket.chartpractice
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.zerdaket.chartpractice.widget.chart.pie.model.PieData
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlin.random.Random
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(R.layout.activity_main) {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        val list = ArrayList<PieData>()
-        for (index in 0..3) {
-            list.add(PieData(
-                index,
-                Random.Default.nextFloat()
-            ))
+        pieChartBtn.setOnClickListener {
+            startActivity(Intent(this, PieChartActivity::class.java))
         }
-        pieChart.setData(list)
-
-        polygon.setData(mutableListOf(3.0f, 2.0f, 2.0f, 4.0f, 1.0f, 6.0f))
+        regularPolygonBtn.setOnClickListener {
+            startActivity(Intent(this, RegularPolygonActivity::class.java))
+        }
+        histogramBtn.setOnClickListener {
+            startActivity(Intent(this, HistogramActivity::class.java))
+        }
     }
+
 }
