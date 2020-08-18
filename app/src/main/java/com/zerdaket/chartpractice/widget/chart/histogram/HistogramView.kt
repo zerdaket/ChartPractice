@@ -37,6 +37,7 @@ class HistogramView @JvmOverloads constructor(context: Context, attrs: Attribute
     private var currentSelectedDay = -1
     private val backgroundPathList = ArrayList<Path>()
     private val dataCollection = arrayOfNulls<HistogramData>(7)
+    private val maxValue = 100f
 
     private val globalRegion = Region()
 
@@ -90,10 +91,10 @@ class HistogramView @JvmOverloads constructor(context: Context, attrs: Attribute
             path.lineTo(right, bottom.minus(arcHeight))
             path.arcTo(left, bottom.minus(arcHeight), right, bottom, 0f, 180f, false)
             path.close()
-            backgroundPathList[index] = path
+            backgroundPathList.add(path)
             dataCollection[index]?.let {
-                val histogramHeight = 0f
-                val histogramTop = top.minus(histogramHeight)
+                val height = histogramHeight.times(it.value.div(maxValue))
+                val histogramTop = bottom.minus(arcHeight).minus(height)
                 histogramPath.moveTo(left, bottom.minus(arcHeight))
                 histogramPath.lineTo(left, histogramTop.plus(arcHeight))
                 histogramPath.arcTo(left, histogramTop, right, histogramTop.plus(arcHeight), -180f, 180f, false)
