@@ -124,13 +124,13 @@ class HistogramView @JvmOverloads constructor(context: Context, attrs: Attribute
         val y = event.y.toInt()
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                currentSelectedDay = getTouchedRegion(x, y)
             }
             MotionEvent.ACTION_MOVE -> {
-
+                currentSelectedDay = getTouchedRegion(x, y)
             }
             MotionEvent.ACTION_UP -> {
-
+                currentSelectedDay = getTouchedRegion(x, y)
             }
             MotionEvent.ACTION_CANCEL -> {
 
@@ -157,8 +157,12 @@ class HistogramView @JvmOverloads constructor(context: Context, attrs: Attribute
     }
 
     private fun drawHistogram(canvas: Canvas) {
-        mainPaint.color = Color.DKGRAY
         for (dayRegion in dayRegionMap) {
+            if (dayRegion.key == currentSelectedDay) {
+                mainPaint.color = Color.YELLOW
+            } else {
+                mainPaint.color = Color.DKGRAY
+            }
             canvas.drawPath(dayRegion.value.first, mainPaint)
         }
     }
@@ -176,7 +180,7 @@ class HistogramView @JvmOverloads constructor(context: Context, attrs: Attribute
         }
         val size = min(dataCollection.size, data.size)
         for (index in 0 until size) {
-            dataCollection[index] = data[index]
+            dataCollection[data[index].getDayofWeek()] = data[index]
         }
         invalidate()
     }
