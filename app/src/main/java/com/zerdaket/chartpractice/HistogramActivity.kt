@@ -15,8 +15,9 @@ class HistogramActivity: AppCompatActivity(R.layout.activity_histogram) {
         super.onCreate(savedInstanceState)
         val list = ArrayList<HistogramData>()
         val timestamp = System.currentTimeMillis()
+        val array = arrayOf(12f, 15f, 6f, 28f, 42f, 30f, 61f)
         for (index in 0..6) {
-            val value = (1f..100f).start
+            val value = array.random()
             list.add(HistogramData(timestamp.times(index), value))
         }
         histogram.setData(list)
