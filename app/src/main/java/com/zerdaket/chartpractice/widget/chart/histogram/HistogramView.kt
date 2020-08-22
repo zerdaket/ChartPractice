@@ -70,18 +70,22 @@ class HistogramView @JvmOverloads constructor(context: Context, attrs: Attribute
             x = 0f
             y = h - h.minus(histogramHeight).div(2)
         }
+        // 设置可触摸的范围
         globalRegion.set(x.toInt(), y.minus(histogramHeight).toInt(), x.plus(histogramTotalWidth).toInt(), y.toInt())
         originalPointF.set(x, y)
+        // 计算条形图间隔的宽度
         val histogramGap = histogramGapRatio.div(totalWidthRatio).times(histogramTotalWidth)
+        // 计算每个条形图的宽度
         val histogramWidth = histogramWidthRatio.div(totalWidthRatio).times(histogramTotalWidth)
         textPositions.clear()
         backgroundPathList.clear()
+        // 计算弧形的高
+        val arcHeight = histogramHeight.times(0.08f)
         for (index in 0..6) {
             val left = histogramGap.times(index + 1) + histogramWidth.times(index) + x
             val top = y.minus(histogramHeight)
             val right = histogramGap.times(index + 1) + histogramWidth.times(index + 1) + x
             val bottom = y - textPaint.textSize.plus(marginBottom.times(2))
-            val arcHeight = histogramHeight.times(0.08f)
             val path = Path()
             val histogramPath = Path()
             val region = Region()
@@ -92,6 +96,7 @@ class HistogramView @JvmOverloads constructor(context: Context, attrs: Attribute
             path.arcTo(left, bottom.minus(arcHeight), right, bottom, 0f, 180f, false)
             path.close()
             backgroundPathList.add(path)
+            // 计算对应时间的条形图高度和位置
             dataCollection[index]?.let {
                 val height = histogramHeight.times(it.value.div(maxValue))
                 val histogramTop = bottom.minus(arcHeight).minus(height)
@@ -104,6 +109,7 @@ class HistogramView @JvmOverloads constructor(context: Context, attrs: Attribute
                 region.setPath(histogramPath, globalRegion)
                 dayRegionMap[index] = Pair(histogramPath, region)
             }
+            // 计算底部文字的坐标
             val textWidth = textPaint.measureText(week[index])
             val centerX = left + histogramWidth.div(2)
             val textX = centerX - textWidth.div(2)
@@ -132,14 +138,14 @@ class HistogramView @JvmOverloads constructor(context: Context, attrs: Attribute
             MotionEvent.ACTION_UP -> {
                 currentSelectedDay = getTouchedRegion(x, y)
             }
-            MotionEvent.ACTION_CANCEL -> {
-
-            }
         }
         invalidate()
         return true
     }
 
+    /**
+     * 获取当前触摸的条形图
+     */
     private fun getTouchedRegion(x: Int, y: Int): Int {
         for (dayRegion in dayRegionMap) {
             if (dayRegion.value.second.contains(x, y)) {
@@ -149,6 +155,9 @@ class HistogramView @JvmOverloads constructor(context: Context, attrs: Attribute
         return -1
     }
 
+    /**
+     * 绘制每个条形图的背景
+     */
     private fun drawHistogramBackground(canvas: Canvas) {
         mainPaint.color = Color.LTGRAY
         for (path in backgroundPathList) {
@@ -156,6 +165,9 @@ class HistogramView @JvmOverloads constructor(context: Context, attrs: Attribute
         }
     }
 
+    /**
+     * 绘制条形图
+     */
     private fun drawHistogram(canvas: Canvas) {
         for (dayRegion in dayRegionMap) {
             if (dayRegion.key == currentSelectedDay) {
@@ -167,6 +179,9 @@ class HistogramView @JvmOverloads constructor(context: Context, attrs: Attribute
         }
     }
 
+    /**
+     * 绘制底部文字
+     */
     private fun drawBottomText(canvas: Canvas) {
         for (index in week.indices) {
             val pointF = textPositions[index]

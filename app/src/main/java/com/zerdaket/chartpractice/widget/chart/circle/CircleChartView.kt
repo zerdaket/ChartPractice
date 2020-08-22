@@ -15,6 +15,10 @@ class CircleChartView @JvmOverloads constructor(context: Context, attrs: Attribu
     private val mainPaint = Paint()
     private val textPaint = Paint()
 
+    init {
+        mainPaint.isAntiAlias = true
+    }
+
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
     }
