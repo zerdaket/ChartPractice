@@ -20,6 +20,7 @@
         <activity android:name=".PieChartActivity" />
         <activity android:name=".RegularPolygonActivity" />
         <activity android:name=".HistogramActivity" />
+        <activity android:name=".CircleChartActivity" />
     </application>
 
 </manifest>

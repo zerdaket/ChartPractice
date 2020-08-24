@@ -18,6 +18,9 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         histogramBtn.setOnClickListener {
             startActivity(Intent(this, HistogramActivity::class.java))
         }
+        circleBtn.setOnClickListener {
+            startActivity(Intent(this, CircleChartActivity::class.java))
+        }
     }
 
 }
