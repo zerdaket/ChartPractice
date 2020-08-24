@@ -33,7 +33,7 @@ class CircleChartView @JvmOverloads constructor(context: Context, attrs: Attribu
         ringWidth = min.div(20)
         mainPaint.strokeWidth = ringWidth
         radius = min.div(2).minus(ringWidth.div(2))
-        centerPointF.set(x.div(2f), y.div(2f))
+        centerPointF.set(w.div(2f), h.div(2f))
         ringPath.addCircle(centerPointF.x, centerPointF.y, radius, Path.Direction.CW)
     }
 
