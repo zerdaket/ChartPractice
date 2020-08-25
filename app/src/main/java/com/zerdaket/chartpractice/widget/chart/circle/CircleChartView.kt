@@ -1,5 +1,6 @@
 package com.zerdaket.chartpractice.widget.chart.circle
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
@@ -18,12 +19,29 @@ class CircleChartView @JvmOverloads constructor(context: Context, attrs: Attribu
     private val mainPaint = Paint()
     private val textPaint = Paint()
     private val ringPath = Path()
+    private val progressPath = Path()
     private val centerPointF = PointF()
+    private val rectF = RectF()
+    private val progressAnimator = ValueAnimator.ofFloat(100f)
+    private val maxValue = 100f
 
     init {
         mainPaint.isAntiAlias = true
         mainPaint.color = Color.LTGRAY
         mainPaint.style = Paint.Style.STROKE
+        mainPaint.strokeCap = Paint.Cap.ROUND
+        progressAnimator.duration = 2000
+        progressAnimator.addUpdateListener {
+            doOnUpdate(it.animatedValue as Float)
+        }
+    }
+
+    private fun doOnUpdate(value: Float) {
+        progressPath.reset()
+        rectF.set(centerPointF.x.minus(radius), centerPointF.y.minus(radius), centerPointF.x.plus(radius), centerPointF.y.plus(radius))
+        val sweepAngle = value.div(maxValue).times(360f)
+        progressPath.addArc(rectF, -90f, sweepAngle)
+        postInvalidate()
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -40,11 +58,25 @@ class CircleChartView @JvmOverloads constructor(context: Context, attrs: Attribu
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         drawRing(canvas)
+        drawProgress(canvas)
     }
 
     private fun drawRing(canvas: Canvas) {
+        mainPaint.color = Color.LTGRAY
         canvas.drawPath(ringPath, mainPaint)
     }
 
+    private fun drawProgress(canvas: Canvas) {
+        mainPaint.color = Color.YELLOW
+        canvas.drawPath(progressPath, mainPaint)
+    }
 
+    fun start() {
+        progressAnimator.start()
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        progressAnimator.cancel()
+    }
 }
