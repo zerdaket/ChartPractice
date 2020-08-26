@@ -16,13 +16,16 @@ class CircleChartActivity : AppCompatActivity(R.layout.activity_circlechart) {
         super.onCreate(savedInstanceState)
         progressEdt.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
+                if (s.isNullOrEmpty()) {
+                    progressEdt.setText("0")
+                }
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                s?.let {
+                if (!s.isNullOrEmpty()) {
                     circle.setProgress(s.toString().toFloat())
                 }
             }
