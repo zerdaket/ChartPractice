@@ -11,10 +11,23 @@
         android:layout_height="300dp"
         android:layout_gravity="center"/>
 
+    <EditText
+        android:id="@+id/progressEdt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:text="0"/>
+
     <Button
         android:id="@+id/start"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="start"/>
+
+    <Button
+        android:id="@+id/reset"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="reset"/>
 
 </LinearLayout>

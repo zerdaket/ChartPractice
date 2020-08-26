@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
 import kotlin.math.min
 
 /**
@@ -22,7 +23,7 @@ class CircleChartView @JvmOverloads constructor(context: Context, attrs: Attribu
     private val progressPath = Path()
     private val centerPointF = PointF()
     private val rectF = RectF()
-    private val progressAnimator = ValueAnimator.ofFloat(100f)
+    private val progressAnimator = ValueAnimator.ofFloat(0f)
     private val maxValue = 100f
 
     init {
@@ -30,7 +31,8 @@ class CircleChartView @JvmOverloads constructor(context: Context, attrs: Attribu
         mainPaint.color = Color.LTGRAY
         mainPaint.style = Paint.Style.STROKE
         mainPaint.strokeCap = Paint.Cap.ROUND
-        progressAnimator.duration = 2000
+        progressAnimator.duration = 1000
+        progressAnimator.interpolator = AccelerateDecelerateInterpolator()
         progressAnimator.addUpdateListener {
             doOnUpdate(it.animatedValue as Float)
         }
@@ -69,6 +71,15 @@ class CircleChartView @JvmOverloads constructor(context: Context, attrs: Attribu
     private fun drawProgress(canvas: Canvas) {
         mainPaint.color = Color.YELLOW
         canvas.drawPath(progressPath, mainPaint)
+    }
+
+    fun reset() {
+        doOnUpdate(0f)
+    }
+
+    fun setProgress(progress: Float) {
+        val value = progress.coerceIn(0f, 100f)
+        progressAnimator.setFloatValues(value)
     }
 
     fun start() {
