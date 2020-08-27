@@ -1,9 +1,8 @@
 package com.zerdaket.chartpractice
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import kotlinx.android.synthetic.main.activity_circlechart.*
 
 /**
@@ -14,22 +13,14 @@ class CircleChartActivity : AppCompatActivity(R.layout.activity_circlechart) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        progressEdt.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                if (s.isNullOrEmpty()) {
-                    progressEdt.setText("0")
-                }
+        progressEdt.addTextChangedListener(afterTextChanged = { text ->
+            if (text.isNullOrEmpty()) {
+                progressEdt.setText("0")
             }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+        }, onTextChanged = { text, _, _, _ ->
+            if (!text.isNullOrEmpty()) {
+                circle.setProgress(text.toString().toFloat())
             }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (!s.isNullOrEmpty()) {
-                    circle.setProgress(s.toString().toFloat())
-                }
-            }
-
         })
         start.setOnClickListener {
             circle.start()
