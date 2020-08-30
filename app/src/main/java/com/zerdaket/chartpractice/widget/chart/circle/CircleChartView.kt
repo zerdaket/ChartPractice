@@ -38,6 +38,9 @@ class CircleChartView @JvmOverloads constructor(context: Context, attrs: Attribu
         }
     }
 
+    /**
+     * 更新进度同时绘制View
+     */
     private fun doOnUpdate(value: Float) {
         progressPath.reset()
         rectF.set(centerPointF.x.minus(radius), centerPointF.y.minus(radius), centerPointF.x.plus(radius), centerPointF.y.plus(radius))
@@ -63,25 +66,40 @@ class CircleChartView @JvmOverloads constructor(context: Context, attrs: Attribu
         drawProgress(canvas)
     }
 
+    /**
+     * 绘制圆环背景
+     */
     private fun drawRing(canvas: Canvas) {
         mainPaint.color = Color.LTGRAY
         canvas.drawPath(ringPath, mainPaint)
     }
 
+    /**
+     * 绘制圆环进度
+     */
     private fun drawProgress(canvas: Canvas) {
         mainPaint.color = Color.YELLOW
         canvas.drawPath(progressPath, mainPaint)
     }
 
+    /**
+     * 重置圆环进度
+     */
     fun reset() {
         doOnUpdate(0f)
     }
 
+    /**
+     * 设置进度
+     */
     fun setProgress(progress: Float) {
         val value = progress.coerceIn(0f, 100f)
         progressAnimator.setFloatValues(value)
     }
 
+    /**
+     * 开始执行动画
+     */
     fun start() {
         progressAnimator.start()
     }
