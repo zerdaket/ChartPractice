@@ -6,7 +6,10 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
+import kotlin.math.ceil
 import kotlin.math.min
 
 /**
@@ -26,7 +29,7 @@ class CircleChartView @JvmOverloads constructor(context: Context, attrs: Attribu
     private val progressAnimator = ValueAnimator.ofFloat(0f)
     private val maxValue = 100f
 
-    private var listener: ProgressChangedListener? = null
+    private var progressChangedListener: ProgressChangedListener? = null
 
     init {
         mainPaint.isAntiAlias = true
@@ -48,7 +51,7 @@ class CircleChartView @JvmOverloads constructor(context: Context, attrs: Attribu
         rectF.set(centerPointF.x.minus(radius), centerPointF.y.minus(radius), centerPointF.x.plus(radius), centerPointF.y.plus(radius))
         val sweepAngle = value.div(maxValue).times(360f)
         progressPath.addArc(rectF, -90f, sweepAngle)
-        listener?.onChanged(value.div(maxValue))
+        progressChangedListener?.onChanged(ceil(value.div(maxValue).times(100)))
         postInvalidate()
     }
 
@@ -101,7 +104,19 @@ class CircleChartView @JvmOverloads constructor(context: Context, attrs: Attribu
     }
 
     fun setProgressChangedListener(owner: LifecycleOwner, listener: ProgressChangedListener) {
+        if (owner.lifecycle.currentState == Lifecycle.State.DESTROYED) {
+            return
+        }
+        progressChangedListener = listener
+        owner.lifecycle.addObserver(object : LifecycleEventObserver {
+            override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+                if (owner.lifecycle.currentState == Lifecycle.State.DESTROYED) {
+                    progressChangedListener = null
+                    owner.lifecycle.removeObserver(this)
+                }
+            }
 
+        })
     }
 
     /**
