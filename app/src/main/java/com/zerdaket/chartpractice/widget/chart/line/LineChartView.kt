@@ -21,6 +21,9 @@ class LineChartView @JvmOverloads constructor(context: Context, attrs: Attribute
     private val bounds = RectF()
     private val chartBounds = RectF()
 
+    private val bottomTextPositionMap = mutableMapOf<Int, PointF>()
+    private val verticalTextPositionMap = mutableMapOf<Int, PointF>()
+
     init {
         textPaint.isAntiAlias = true
         textPaint.textSize = 12f.dp2px()
@@ -37,6 +40,16 @@ class LineChartView @JvmOverloads constructor(context: Context, attrs: Attribute
         val chartMarginBottom = 12f.dp2px() + 8f.dp2px()
         // TODO 兼容控件宽高比字体小的情况
         chartBounds.set(bounds.left + chartMarginStart, bounds.top + chartMarginTop, bounds.right - chartMarginEnd, bounds.bottom - chartMarginBottom)
+        calculateBottomTextPosition()
+        calculateVerticalTextPosition()
+    }
+
+    private fun calculateBottomTextPosition() {
+
+    }
+
+    private fun calculateVerticalTextPosition() {
+
     }
 
     override fun onDraw(canvas: Canvas) {
