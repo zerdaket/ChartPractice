@@ -45,11 +45,25 @@ class LineChartView @JvmOverloads constructor(context: Context, attrs: Attribute
     }
 
     private fun calculateBottomTextPosition() {
-
+        val y = chartBounds.bottom + 4f.dp2px() + 12f.dp2px()
+        val gap = chartBounds.width().div(time.size)
+        for (index in time.indices) {
+            val text = time[index]
+            val offset = textPaint.measureText(text.toString()).div(2f)
+            val x = chartBounds.left + gap.times(index) - offset
+            bottomTextPositionMap[text] = PointF(x, y)
+        }
     }
 
     private fun calculateVerticalTextPosition() {
-
+        val x = chartBounds.right + 2f.dp2px()
+        val gap = chartBounds.height().div(verticalScale.size - 1)
+        for (index in verticalScale.indices) {
+            val text = verticalScale[index]
+            val offset = 12f.dp2px().div(2)
+            val y = chartBounds.bottom - gap.times(index) + offset
+            verticalTextPositionMap[text] = PointF(x, y)
+        }
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -68,7 +82,13 @@ class LineChartView @JvmOverloads constructor(context: Context, attrs: Attribute
     }
 
     private fun drawText(canvas: Canvas) {
+        bottomTextPositionMap.forEach {
+            canvas.drawText(it.key.toString(), it.value.x, it.value.y, textPaint)
+        }
 
+        verticalTextPositionMap.forEach {
+            canvas.drawText(it.key.toString(), it.value.x, it.value.y, textPaint)
+        }
     }
 
 }
