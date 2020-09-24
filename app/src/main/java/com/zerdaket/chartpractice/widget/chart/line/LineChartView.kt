@@ -14,6 +14,7 @@ class LineChartView @JvmOverloads constructor(context: Context, attrs: Attribute
 
     private val time = arrayOf(0, 6, 12, 18)
     private val verticalScale = arrayOf(0, 25, 50, 75, 100)
+    private val maxValue = 100
 
     private val linePath = Path()
     private val textPaint = Paint()
@@ -74,7 +75,14 @@ class LineChartView @JvmOverloads constructor(context: Context, attrs: Attribute
     }
 
     private fun drawBackground(canvas: Canvas) {
-
+        mainPaint.color = Color.BLACK
+        verticalScale.forEach {
+            val startX = chartBounds.left
+            val startY = chartBounds.bottom - it.div(maxValue.toFloat()).times(chartBounds.height())
+            val endX = chartBounds.right
+            val endY = startY
+            canvas.drawLine(startX, startY, endX, endY, mainPaint)
+        }
     }
 
     private fun drawLines(canvas: Canvas) {
