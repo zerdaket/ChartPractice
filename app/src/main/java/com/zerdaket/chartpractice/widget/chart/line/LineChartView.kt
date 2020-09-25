@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
+import com.zerdaket.chartpractice.widget.chart.line.model.LineData
 import com.zerdaket.chartpractice.widget.dp2px
 
 /**
@@ -25,6 +26,8 @@ class LineChartView @JvmOverloads constructor(context: Context, attrs: Attribute
     private val bottomTextPositionMap = mutableMapOf<Int, PointF>()
     private val verticalTextPositionMap = mutableMapOf<Int, PointF>()
 
+    private val lineDataList: MutableList<LineData> = mutableListOf()
+
     init {
         textPaint.isAntiAlias = true
         textPaint.textSize = 12f.dp2px()
@@ -36,7 +39,7 @@ class LineChartView @JvmOverloads constructor(context: Context, attrs: Attribute
         super.onSizeChanged(w, h, oldw, oldh)
         bounds.set(paddingStart.toFloat(), paddingTop.toFloat(), w.minus(paddingEnd.toFloat()), h.minus(paddingBottom.toFloat()))
         val chartMarginStart = textPaint.measureText(0.toString())
-        val chartMarginEnd = textPaint.measureText(100.toString()) + 4f.dp2px()
+        val chartMarginEnd = textPaint.measureText(100.toString()) + 8f.dp2px()
         val chartMarginTop = 12f.dp2px().div(2) + 4f.dp2px()
         val chartMarginBottom = 12f.dp2px() + 8f.dp2px()
         // TODO 兼容控件宽高比字体小的情况
@@ -57,9 +60,12 @@ class LineChartView @JvmOverloads constructor(context: Context, attrs: Attribute
     }
 
     private fun calculateVerticalTextPosition() {
-        val x = chartBounds.right + 2f.dp2px()
+        val x = chartBounds.right + 4f.dp2px()
         val gap = chartBounds.height().div(verticalScale.size - 1)
         for (index in verticalScale.indices) {
+            if (index == 0) {
+                continue
+            }
             val text = verticalScale[index]
             val offset = 12f.dp2px().div(2)
             val y = chartBounds.bottom - gap.times(index) + offset
@@ -97,6 +103,12 @@ class LineChartView @JvmOverloads constructor(context: Context, attrs: Attribute
         verticalTextPositionMap.forEach {
             canvas.drawText(it.key.toString(), it.value.x, it.value.y, textPaint)
         }
+    }
+
+    fun setData(list: List<LineData>) {
+        lineDataList.clear()
+        lineDataList.addAll(list)
+        invalidate()
     }
 
 }

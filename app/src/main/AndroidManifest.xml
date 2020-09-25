@@ -21,6 +21,7 @@
         <activity android:name=".RegularPolygonActivity" />
         <activity android:name=".HistogramActivity" />
         <activity android:name=".CircleChartActivity" />
+        <activity android:name=".LineChartActivity" />
     </application>
 
 </manifest>

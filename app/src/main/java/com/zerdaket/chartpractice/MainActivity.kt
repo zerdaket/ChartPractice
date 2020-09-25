@@ -21,6 +21,9 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         circleBtn.setOnClickListener {
             startActivity(Intent(this, CircleChartActivity::class.java))
         }
+        lineChartBtn.setOnClickListener {
+            startActivity(Intent(this, LineChartActivity::class.java))
+        }
     }
 
 }
