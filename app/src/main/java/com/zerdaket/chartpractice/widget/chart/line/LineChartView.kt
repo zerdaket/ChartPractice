@@ -92,7 +92,21 @@ class LineChartView @JvmOverloads constructor(context: Context, attrs: Attribute
     }
 
     private fun drawLines(canvas: Canvas) {
-
+        val xGap = chartBounds.width().div(24)
+        val yGap = chartBounds.height().div(100)
+        lineDataList.forEachIndexed { index, lineData ->
+            val x = xGap.times(lineData.hour)
+            val y = yGap.times(lineData.realValue)
+            if (index == 0) {
+                linePath.moveTo(x, y)
+                return@forEachIndexed
+            }
+            linePath.lineTo(x, y)
+        }
+        mainPaint.color = Color.YELLOW
+        mainPaint.style = Paint.Style.STROKE
+        mainPaint.strokeWidth = 2f.dp2px()
+        canvas.drawPath(linePath, mainPaint)
     }
 
     private fun drawText(canvas: Canvas) {
