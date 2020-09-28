@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.view.View
 import com.zerdaket.chartpractice.widget.chart.line.model.LineData
 import com.zerdaket.chartpractice.widget.dp2px
+import kotlin.math.max
 
 /**
  * @author zerdaket
@@ -30,6 +31,7 @@ class LineChartView @JvmOverloads constructor(context: Context, attrs: Attribute
     private val verticalTextPositionMap = mutableMapOf<Int, PointF>()
 
     private val lineDataList: MutableList<LineData> = mutableListOf()
+    private val maxLineData = LineData(0, 0)
 
     init {
         textPaint.isAntiAlias = true
@@ -99,13 +101,17 @@ class LineChartView @JvmOverloads constructor(context: Context, attrs: Attribute
         val yGap = chartBounds.height().div(100)
         lineDataList.forEachIndexed { index, lineData ->
             val x = xGap.times(lineData.hour)
-            val y = yGap.times(lineData.realValue)
+            val y = chartBounds.bottom - yGap.times(lineData.realValue)
             if (index == 0) {
                 linePath.moveTo(x, y)
                 return@forEachIndexed
             }
             linePath.lineTo(x, y)
         }
+        val x = xGap.times(maxLineData.hour)
+        val y = chartBounds.bottom - yGap.times(maxLineData.realValue)
+        val shader = LinearGradient(x, y, x, chartBounds.bottom, lineChartStartColor, lineChartEndColor, Shader.TileMode.CLAMP)
+        mainPaint.shader = shader
         mainPaint.color = lineChartStartColor
         mainPaint.style = Paint.Style.STROKE
         mainPaint.strokeWidth = 2f.dp2px()
@@ -125,6 +131,16 @@ class LineChartView @JvmOverloads constructor(context: Context, attrs: Attribute
     fun setData(list: List<LineData>) {
         lineDataList.clear()
         lineDataList.addAll(list)
+        val map = mutableMapOf<Int, LineData>()
+        var maxValue = 0
+        lineDataList.forEach {
+            maxValue = max(it.realValue, maxValue)
+            map[it.realValue] = it
+        }
+        map[maxValue]?.let {
+            maxLineData.hour = it.hour
+            maxLineData.realValue = it.realValue
+        }
         invalidate()
     }
 
