@@ -23,6 +23,9 @@ class LineChartView @JvmOverloads constructor(context: Context, attrs: Attribute
     private val bounds = RectF()
     private val chartBounds = RectF()
 
+    private val lineChartStartColor = Color.parseColor("#feada6")
+    private val lineChartEndColor = Color.parseColor("#f5efef")
+
     private val bottomTextPositionMap = mutableMapOf<Int, PointF>()
     private val verticalTextPositionMap = mutableMapOf<Int, PointF>()
 
@@ -103,7 +106,7 @@ class LineChartView @JvmOverloads constructor(context: Context, attrs: Attribute
             }
             linePath.lineTo(x, y)
         }
-        mainPaint.color = Color.YELLOW
+        mainPaint.color = lineChartStartColor
         mainPaint.style = Paint.Style.STROKE
         mainPaint.strokeWidth = 2f.dp2px()
         canvas.drawPath(linePath, mainPaint)
