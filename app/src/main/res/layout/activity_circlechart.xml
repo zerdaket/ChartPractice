@@ -4,27 +4,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <FrameLayout
+    <com.zerdaket.chartpractice.widget.chart.circle.CircleChartView
+        android:id="@+id/circle"
+        android:layout_marginTop="20dp"
         android:layout_width="300dp"
         android:layout_height="300dp"
-        android:layout_marginTop="20dp"
-        android:layout_gravity="center">
-
-        <com.zerdaket.chartpractice.widget.chart.circle.CircleChartView
-            android:id="@+id/circle"
-            android:layout_width="300dp"
-            android:layout_height="300dp"/>
-
-        <TextView
-            android:id="@+id/progressTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="0%"
-            android:textColor="@android:color/black"
-            android:textSize="32sp"/>
-
-    </FrameLayout>
+        android:layout_gravity="center"/>
 
     <EditText
         android:id="@+id/progressEdt"
