@@ -19,6 +19,7 @@ class LineChartView @JvmOverloads constructor(context: Context, attrs: Attribute
     private val maxValue = 100
 
     private val linePath = Path()
+    private val shaderPath = Path()
     private val textPaint = Paint()
     private val mainPaint = Paint()
     private val bounds = RectF()
@@ -86,6 +87,7 @@ class LineChartView @JvmOverloads constructor(context: Context, attrs: Attribute
     }
 
     private fun drawBackground(canvas: Canvas) {
+        mainPaint.reset()
         mainPaint.color = Color.BLACK
         verticalScale.forEach {
             val startX = chartBounds.left
@@ -97,6 +99,7 @@ class LineChartView @JvmOverloads constructor(context: Context, attrs: Attribute
     }
 
     private fun drawLines(canvas: Canvas) {
+        mainPaint.reset()
         val xGap = chartBounds.width().div(24)
         val yGap = chartBounds.height().div(100)
         lineDataList.forEachIndexed { index, lineData ->
@@ -104,18 +107,25 @@ class LineChartView @JvmOverloads constructor(context: Context, attrs: Attribute
             val y = chartBounds.bottom - yGap.times(lineData.realValue)
             if (index == 0) {
                 linePath.moveTo(x, y)
+                shaderPath.moveTo(x, chartBounds.bottom)
+                shaderPath.lineTo(x, y)
                 return@forEachIndexed
             }
             linePath.lineTo(x, y)
+            shaderPath.lineTo(x, y)
+            if (index == lineDataList.lastIndex) {
+                shaderPath.lineTo(x, chartBounds.bottom)
+                shaderPath.close()
+            }
         }
-        val x = xGap.times(maxLineData.hour)
-        val y = chartBounds.bottom - yGap.times(maxLineData.realValue)
-        val shader = LinearGradient(x, y, x, chartBounds.bottom, lineChartStartColor, lineChartEndColor, Shader.TileMode.CLAMP)
-        mainPaint.shader = shader
         mainPaint.color = lineChartStartColor
         mainPaint.style = Paint.Style.STROKE
         mainPaint.strokeWidth = 2f.dp2px()
         canvas.drawPath(linePath, mainPaint)
+        mainPaint.color = Color.TRANSPARENT
+        val shader = LinearGradient(0f, 0f, 0f, chartBounds.bottom, lineChartStartColor, lineChartEndColor, Shader.TileMode.CLAMP)
+        mainPaint.shader = shader
+        canvas.drawPath(shaderPath, mainPaint)
     }
 
     private fun drawText(canvas: Canvas) {
