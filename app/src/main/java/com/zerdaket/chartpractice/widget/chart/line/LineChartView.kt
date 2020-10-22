@@ -103,7 +103,7 @@ class LineChartView @JvmOverloads constructor(context: Context, attrs: Attribute
         val xGap = chartBounds.width().div(24)
         val yGap = chartBounds.height().div(100)
         lineDataList.forEachIndexed { index, lineData ->
-            val x = xGap.times(lineData.hour)
+            val x = xGap.times(lineData.hour) + 6f.dp2px()
             val y = chartBounds.bottom - yGap.times(lineData.realValue)
             if (index == 0) {
                 linePath.moveTo(x, y)
