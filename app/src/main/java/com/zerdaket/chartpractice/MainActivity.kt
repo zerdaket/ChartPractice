@@ -24,6 +24,9 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         lineChartBtn.setOnClickListener {
             startActivity(Intent(this, LineChartActivity::class.java))
         }
+        bezierCurveBtn.setOnClickListener {
+            startActivity(Intent(this, BezierCurveActivity::class.java))
+        }
     }
 
 }

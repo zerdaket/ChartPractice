@@ -22,6 +22,7 @@
         <activity android:name=".HistogramActivity" />
         <activity android:name=".CircleChartActivity" />
         <activity android:name=".LineChartActivity" />
+        <activity android:name=".BezierCurveActivity" />
     </application>
 
 </manifest>
