@@ -1,5 +1,6 @@
 package com.zerdaket.chartpractice
 
+import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 
 /**
@@ -8,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
  */
 class BezierCurveActivity: AppCompatActivity(R.layout.activity_bezier_curve) {
 
-
-
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
 }
