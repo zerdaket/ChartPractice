@@ -33,7 +33,6 @@ class CircleChartView @JvmOverloads constructor(context: Context, attrs: Attribu
     private val textPaint = Paint()
     private val backgroundPath = Path()
     private val progressPath = Path()
-    private val circlePath = Path()
     private val centerPointF = PointF()
     private val bounds = RectF()
     private val progressBounds = RectF()
@@ -42,6 +41,10 @@ class CircleChartView @JvmOverloads constructor(context: Context, attrs: Attribu
     private val targetValue = 100f
     private var percent = 0f
     private val numberFormatter = NumberFormat.getInstance()
+
+    private val progressPathMeasure = PathMeasure()
+    private val pos = floatArrayOf(0f, 0f)
+    private val tan = floatArrayOf(0f, 0f)
 
     private var progressChangedListener: ProgressChangedListener? = null
 
@@ -72,6 +75,11 @@ class CircleChartView @JvmOverloads constructor(context: Context, attrs: Attribu
         percent = value.div(targetValue)
         val sweepAngle = percent.times(360f)
         progressPath.addArc(progressBounds, -90f, sweepAngle)
+//        progressPathMeasure.setPath(progressPath, false)
+//        progressPathMeasure.getPosTan(progressPathMeasure.length, pos, tan)
+        val per = if (percent < 1f) percent else 0f
+        progressPathMeasure.getPosTan(progressPathMeasure.length.times(per), pos, tan)
+        centerPointF.set(pos[0], pos[1])
         progressChangedListener?.onChanged(percent.times(100f))
         invalidate()
     }
@@ -96,10 +104,9 @@ class CircleChartView @JvmOverloads constructor(context: Context, attrs: Attribu
 
         backgroundPath.reset()
         backgroundPath.addCircle(centerPointF.x, centerPointF.y, radius, Path.Direction.CW)
+        progressPathMeasure.setPath(backgroundPath, false)
 
         circleRadius = outerRadius.times(0.08f)
-        circlePath.reset()
-        circlePath.addCircle(centerPointF.x, centerPointF.y - radius, circleRadius, Path.Direction.CW)
 
         val innerRadius = outerRadius - progressStrokeWidth
         val halfTextHeight = innerRadius.times(0.4f)
@@ -134,7 +141,7 @@ class CircleChartView @JvmOverloads constructor(context: Context, attrs: Attribu
             mainPaint.color = Color.WHITE
             mainPaint.shader = null
             mainPaint.style = Paint.Style.FILL
-            canvas.drawPath(circlePath, mainPaint)
+            canvas.drawCircle(centerPointF.x, centerPointF.y, circleRadius, mainPaint)
         }
     }
 
