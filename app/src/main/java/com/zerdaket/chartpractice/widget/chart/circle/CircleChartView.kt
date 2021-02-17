@@ -110,6 +110,7 @@ class CircleChartView @JvmOverloads constructor(context: Context, attrs: Attribu
     private var numberDisappearingAnimator: ValueAnimator? = null
     private var tickShowingAnimator: ValueAnimator? = null
     private var tickScaleAnimator: ValueAnimator? = null
+    private var tickPercentAnimator: ValueAnimator? = null
     private var numberScaleAnimator: ValueAnimator? = null
     private var numberShowingAnimator: ValueAnimator? = null
     private var tickDisappearingAnimator: ValueAnimator? = null
@@ -164,7 +165,8 @@ class CircleChartView @JvmOverloads constructor(context: Context, attrs: Attribu
         )
         contentBounds.set(originalContentBounds)
 
-        val halfTickHeight = innerRadius * 0.4f
+        tickPaint.strokeWidth = innerRadius * 0.16f
+        val halfTickHeight = innerRadius * 0.35f
         val halfTickWidth = halfTickHeight * tickAspectRatio
         originalTickBounds.set(
             centerPointF.x - halfTickWidth,
@@ -235,15 +237,15 @@ class CircleChartView @JvmOverloads constructor(context: Context, attrs: Attribu
     private fun drawTick(canvas: Canvas) {
         tickPath.reset()
         val startX = tickBounds.left
-        val startY = tickBounds.bottom - tickBounds.height() / 3f
+        val startY = tickBounds.bottom - tickBounds.height() * 2 / 5f
         val joinX = tickBounds.left + tickBounds.width() / 3f
         val joinY = tickBounds.bottom
         val endX = tickBounds.right
-        val endY = tickBounds.top
+        val endY = tickBounds.bottom - tickBounds.height() * 4 / 5f
         tickPath.apply {
             moveTo(startX, startY)
             lineTo(joinX, joinY)
-            moveTo(endX, endY)
+            lineTo(endX, endY)
         }
         tickPathMeasure.setPath(tickPath, false)
 
@@ -371,7 +373,14 @@ class CircleChartView @JvmOverloads constructor(context: Context, attrs: Attribu
                 invalidate()
             }
         }
-        tickAnimator.play(numberDisappearingAnimator).with(tickShowingAnimator).with(tickScaleAnimator)
+        tickPercentAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
+            duration = 500
+            interpolator = scaleInterpolator
+            addUpdateListener {
+                tickPercent = it.animatedValue as Float
+            }
+        }
+        tickAnimator.play(numberDisappearingAnimator).with(tickShowingAnimator).with(tickScaleAnimator).with(tickPercentAnimator)
         tickAnimator.doOnEnd {
             finalTextSize = textPaint.textSize
         }
@@ -469,7 +478,14 @@ class CircleChartView @JvmOverloads constructor(context: Context, attrs: Attribu
                 invalidate()
             }
         }
-        tickAnimator.play(numberDisappearingAnimator).with(tickShowingAnimator).with(tickScaleAnimator)
+        tickPercentAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
+            duration = 500
+            interpolator = scaleInterpolator
+            addUpdateListener {
+                tickPercent = it.animatedValue as Float
+            }
+        }
+        tickAnimator.play(numberDisappearingAnimator).with(tickShowingAnimator).with(tickScaleAnimator).with(tickPercentAnimator)
         tickAnimator.doOnEnd {
             finalTextSize = textPaint.textSize
         }
@@ -495,7 +511,21 @@ class CircleChartView @JvmOverloads constructor(context: Context, attrs: Attribu
                 circlePaint.alpha = alpha
             }
         }
-        afterTargetAnimator.play(numberScaleAnimator).with(numberShowingAnimator)
+        tickShrinkAnimator = ValueAnimator.ofFloat(1f, 0.85f).apply {
+            duration = 500
+            interpolator = scaleInterpolator
+            addUpdateListener {
+                originalTickBounds.scale(it.animatedValue as Float, tickBounds)
+            }
+        }
+        tickDisappearingAnimator = ValueAnimator.ofInt(255, 0).apply {
+            duration = 200
+            interpolator = linearInterpolator
+            addUpdateListener {
+                tickPaint.alpha = it.animatedValue as Int
+            }
+        }
+        afterTargetAnimator.play(numberScaleAnimator).with(numberShowingAnimator).with(tickShrinkAnimator).with(tickDisappearingAnimator)
         val animatorSet = AnimatorSet()
         animatorSet.playSequentially(beforeTargetAnimator, tickAnimator, afterTargetAnimator)
         animatorSet.start()
