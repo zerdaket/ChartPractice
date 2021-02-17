@@ -61,7 +61,7 @@ class CircleChartView @JvmOverloads constructor(context: Context, attrs: Attribu
     private val mainPaint: Paint by lazy {
         Paint().apply {
             isAntiAlias = true
-            color = Color.BLACK
+            color = Color.WHITE
             style = Paint.Style.STROKE
             strokeCap = Paint.Cap.ROUND
         }
@@ -69,28 +69,28 @@ class CircleChartView @JvmOverloads constructor(context: Context, attrs: Attribu
     private val circlePaint: Paint by lazy {
         Paint().apply {
             isAntiAlias = true
-            color = Color.BLACK
+            color = Color.WHITE
             style = Paint.Style.FILL
         }
     }
     private val circleBackgroundPaint: Paint by lazy {
         Paint().apply {
             isAntiAlias = true
-            color = Color.BLACK
+            color = Color.WHITE
             style = Paint.Style.FILL
         }
     }
     private val textPaint: Paint by lazy {
         Paint().apply {
             isAntiAlias = true
-            color = Color.BLACK
+            color = Color.WHITE
             textAlign = Paint.Align.CENTER
         }
     }
     private val tickPaint: Paint by lazy {
         Paint().apply {
             isAntiAlias = true
-            color = Color.BLACK
+            color = Color.WHITE
             style = Paint.Style.STROKE
             strokeCap = Paint.Cap.ROUND
             strokeJoin = Paint.Join.ROUND
