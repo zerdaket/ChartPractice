@@ -13,4 +13,4 @@
 <img src="./image/device-2021-02-22-005015.png" width="30%"/>
 
 ## CircleChart
-![preview](image/device-2021-02-22-010612.gif)
+![preview](image/device-2021-02-22-010612.gif | width="30%")
