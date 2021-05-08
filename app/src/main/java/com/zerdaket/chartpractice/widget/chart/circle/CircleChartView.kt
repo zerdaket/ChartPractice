@@ -270,7 +270,7 @@ class CircleChartView @JvmOverloads constructor(context: Context, attrs: Attribu
         val pos = FloatArray(2)
         val tan = FloatArray(2)
         progressPathMeasure.getPosTan(progressPathMeasure.length, pos, tan)
-        if (pos[0] == 0f || pos[1] == 0f) {
+        if (pos[0] == 0f || pos[1] == 0f || sweepAngle >= 360f) {
             circlePointF.set(centerPointF.x, centerPointF.y - ringRadius)
         } else {
             circlePointF.set(pos[0], pos[1])
@@ -541,7 +541,7 @@ class CircleChartView @JvmOverloads constructor(context: Context, attrs: Attribu
         val pos = FloatArray(2)
         val tan = FloatArray(2)
         progressPathMeasure.getPosTan(progressPathMeasure.length, pos, tan)
-        if (pos[0] == 0f || pos[1] == 0f) {
+        if (pos[0] == 0f || pos[1] == 0f || sweepAngle >= 360f) {
             circlePointF.set(centerPointF.x, centerPointF.y - ringRadius)
         } else {
             circlePointF.set(pos[0], pos[1])
